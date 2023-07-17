@@ -21,4 +21,7 @@ CONNECTION_MONGO_STRING=<MONGODB-DATABASE-CONNECTION-STRING>>
 npm run dev
 
 
+**END Point**
+   - /api/v0.1/users
+
 
