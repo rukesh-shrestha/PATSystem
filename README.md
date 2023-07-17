@@ -1,6 +1,6 @@
 # PATSystem
-This is system of PAT.
 
+This is system of PAT.
 
 **To run this project:**
 
@@ -12,16 +12,18 @@ npm install
 
 Create the .env file in the root directory
 
-Populate the file with 
+Populate the file with
 
 PORT=3000
 
 CONNECTION_MONGO_STRING=<MONGODB-DATABASE-CONNECTION-STRING>>
 
+GOOGLE_CLIENT_ID=<GOOGLE-CLIENT-ID>
+GOOGLE_CLIENT_SECRET=<GOOGLE-SECRET-KEY>
+SESSION_SECRET_KEY=<SESSION-SECRET-KEY>
+
 npm run dev
 
-
 **END Point**
-   - /api/v0.1/users
 
-
+- /api/v0.1/users
