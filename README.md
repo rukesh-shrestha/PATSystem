@@ -4,7 +4,7 @@ This is system of PAT.
 
 **To run this project:**
 
-git clone git@github.com:rukesh-shrestha/PATSystem.git or git clone 
+git clone git@github.com:rukesh-shrestha/PATSystem.git or git clone https://github.com/rukesh-shrestha/PATSystem.git
 
 go to the folder
 
