@@ -3,8 +3,13 @@
 This is system of PAT.
 
 **To run this project:**
-
-git clone git@github.com:rukesh-shrestha/PATSystem.git or git clone https://github.com/rukesh-shrestha/PATSystem.git
+```
+git clone git@github.com:rukesh-shrestha/PATSystem.git
+``` 
+or       
+```
+git clone https://github.com/rukesh-shrestha/PATSystem.git
+```
 
 go to the folder
 
@@ -31,3 +36,11 @@ npm run dev
 
 **END Point**
 
+  
+</ul>
+1. User Home
+      <domain-name>/api/users :- GET
+2. User Sign In
+       <domain-name>/api/users/registration/auth/google :-GET
+3. User Sign Out
+      <domain-name>/api/users/logout
