@@ -30,7 +30,10 @@ Create the .env file in the root directory
   
 -   SESSION_SECRET_KEY=<SESSION-SECRET-KEY>
 
+Run the below command
+```
 npm run dev
+```
 
 
 **Remaining To add in Readme**
