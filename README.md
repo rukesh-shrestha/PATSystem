@@ -11,9 +11,10 @@ or
 git clone https://github.com/rukesh-shrestha/PATSystem.git
 ```
 
-go to the folder
-
+go to the folder and run below command
+```
 npm install
+```
 
 Create the .env file in the root directory
 
@@ -39,8 +40,14 @@ npm run dev
   
 </ul>
 1. User Home
-      <domain-name>/api/users :- GET
+
+  <domain-name>/api/users :- GET
+      
 2. User Sign In
-       <domain-name>/api/users/registration/auth/google :-GET
-3. User Sign Out
-      <domain-name>/api/users/logout
+   
+<domain-name>/api/users/registration/auth/google :-GET
+
+  
+4. User Sign Out
+   
+ <domain-name>/api/users/logout
