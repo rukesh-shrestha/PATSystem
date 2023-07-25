@@ -11,4 +11,15 @@ const userRegister = (req, res) => {
   });
 };
 
-module.exports = { userHome, userRegister };
+const userLogoutController = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    }
+    req.session.destroy();
+    res.status(200).json({ message: "I feel bad you are going" });
+  });
+};
+
+module.exports = { userHome, userRegister, userLogoutController };

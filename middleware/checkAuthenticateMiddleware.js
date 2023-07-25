@@ -6,4 +6,8 @@ const authenticateUser = (req, res, next) => {
       });
 };
 
+// const isLoggedIn = (req, res, next) => {
+//   req.user ? res.redirect("/api/users") : next();
+// };
+
 module.exports = authenticateUser;
