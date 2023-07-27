@@ -2,11 +2,14 @@ const express = require("express");
 const router = express.Router();
 const {
   userHome,
-  userRegister,
   userLogoutController,
 } = require("../controller/userController");
 const passport = require("passport");
 const authenticateUser = require("../middleware/checkAuthenticateMiddleware");
+
+/**
+ *
+ */
 
 router.get("/", authenticateUser, userHome);
 
@@ -25,7 +28,6 @@ router.get(
   }),
   async function (req, res) {
     // Successful authentication, redirect home.
-    console.log(req.user);
 
     res.status(200).redirect("/api/users");
   }
