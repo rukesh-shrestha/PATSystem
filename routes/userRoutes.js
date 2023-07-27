@@ -23,13 +23,11 @@ router.get(
   passport.authenticate("google", {
     failureRedirect: "/login",
   }),
-  function (req, res) {
+  async function (req, res) {
     // Successful authentication, redirect home.
     console.log(req.user);
-    res.redirect("/api/users");
-    res.status(200).json({
-      message: "Welcome ${req.user.username}",
-    });
+
+    res.status(200).redirect("/api/users");
   }
 );
 

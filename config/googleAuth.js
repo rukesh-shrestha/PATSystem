@@ -5,8 +5,8 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 dotenv.config();
 
-const googeleAuth = (passport) => {
-  passport.use(
+const googeleAuth = async (passport) => {
+  await passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -14,15 +14,15 @@ const googeleAuth = (passport) => {
         callbackURL: "/api/users/google/callback",
       },
       async function (accessToken, refreshToken, profile, done) {
-        const newUser = {
-          googleId: profile.id,
-          username: profile.displayName,
-          email: profile.emails[0].value,
-          firstName: profile.name["givenName"],
-          lastName: profile.name["familyName"],
-          image: profile.photos[0].value,
-        };
         try {
+          const newUser = {
+            googleId: profile.id,
+            username: profile.displayName,
+            email: profile.emails[0].value,
+            firstName: profile.name["givenName"],
+            lastName: profile.name["familyName"],
+            image: profile.photos[0].value,
+          };
           let user = await User.findOne({ googleId: profile.id });
 
           if (user) {
@@ -39,8 +39,14 @@ const googeleAuth = (passport) => {
     )
   );
 
-  passport.serializeUser(function (user, done) {
-    done(null, user.id);
+  passport.serializeUser(async function (user, done) {
+    try {
+      done(null, user.id);
+    } catch (error) {
+      console.error(error);
+      done(error, null);
+      process.exit(1);
+    }
   });
 
   passport.deserializeUser(async function (id, done) {
@@ -49,6 +55,7 @@ const googeleAuth = (passport) => {
       done(null, user);
     } catch (error) {
       done(error, null);
+      process.exit(1);
     }
   });
 };
