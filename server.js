@@ -8,13 +8,15 @@ const MongoStore = require("connect-mongo");
 const userRouter = require("./routes/userRoutes");
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
 const passport = require("passport");
 require("./config/googleAuth")(passport);
 require("dotenv").config();
 connectDB();
+const swaggerDocument = YAML.load("./swagger/swaggerAPIDoc.yaml");
 
 const swaggerOptions = {
-  failOnErrors: true,
+  // failOnErrors: true,
   definition: {
     openapi: "3.0.0",
     info: {
@@ -28,7 +30,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./routes*.js"],
+  apis: ["./routes/*.js"],
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
@@ -37,7 +39,7 @@ const corsOptions = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // If you need to allow sending cookies or authentication headers
 };
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use(cors(corsOptions));
 app.use(

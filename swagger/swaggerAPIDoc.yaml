@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: PAT System API
+  version: 0.0.1
+  description: |
+    This is the simple API documentation for the PAT System. It is based on the OpenAPI 3.0 specification.
+
+    **API documentation**
+
+    Updated on 28 July 2023
+  contact:
+    email: rukesh.shrestha@heraldcollege.edu.np
+
+servers:
+  - url: http://localhost:3000
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - googleId
+        - username
+        - email
+        - firstName
+        - lastName
+      properties:
+        googleId:
+          type: string
+          description: User Id from the google authentication
+        username:
+          type: string
+          description: username from the google authentication
+        email:
+          type: string
+          description: user login email from the google authentication
+        firstName:
+          type: string
+          description: user given name from the google authentication
+        lastName:
+          type: string
+          description: user family name from the google authentication
+        image:
+          type: string
+          description: user profile image from the google authentication
+      example:
+        googleId: jhbjfs794_8hnj
+        username: harihar archarya
+        email: harihar@heraldcollege.edu.np
+        firstName: harihar
+        lastName: archarya
+        image: http://linktofile.com
