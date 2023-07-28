@@ -15,25 +15,6 @@ require("dotenv").config();
 connectDB();
 const swaggerDocument = YAML.load("./swagger/swaggerAPIDoc.yaml");
 
-const swaggerOptions = {
-  // failOnErrors: true,
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "PAT System API",
-      version: "0.0.1",
-      description: "PAT system API documentation",
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-      },
-    ],
-  },
-  apis: ["./routes/*.js"],
-};
-
-const specs = swaggerJsdoc(swaggerOptions);
 const corsOptions = {
   origin: process.env.DOMAIN_NAME,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

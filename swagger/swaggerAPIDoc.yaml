@@ -6,14 +6,57 @@ info:
     This is the simple API documentation for the PAT System. It is based on the OpenAPI 3.0 specification.
 
     **API documentation**
-
-    Updated on 28 July 2023
+     - Updated on 28 July 2023
+     
+    Some useful links:
+    - [PAT System Repository](https://github.com/rukesh-shrestha/PATSystem)
   contact:
     email: rukesh.shrestha@heraldcollege.edu.np
 
 servers:
   - url: http://localhost:3000
+    description: Development server
 
+#tags header of the each api docs
+tags:
+  - name: Users
+    description: Operations related to user authentication and authorization
+
+# api docs path
+paths: # Adding the 'paths' property
+  /api/users:
+    get:
+      summary: Get a email of the authenticated users
+      tags:
+        - Users
+      security:
+        - GoogleOAuth2: [] # Apply GoogleOAuth2 security to this endpoint
+      responses:
+        "200":
+          description: Email of the Authenticated User
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized :User is not authenticated
+
+  /api/users/logout:
+    get:
+      summary: Signout from the system.
+      tags:
+        - Users
+      security:
+        - GoogleOAuth2: []
+      responses:
+        "200":
+          description: I feel bad you are going
+        "401":
+          description: Unauthorized
+
+# api model schema
 components:
   schemas:
     User:
@@ -28,25 +71,35 @@ components:
         googleId:
           type: string
           description: User Id from the google authentication
+          example: hbjfs794_8hnj
         username:
           type: string
           description: username from the google authentication
+          example: harihar archarya
         email:
           type: string
           description: user login email from the google authentication
+          example: harihar@heraldcollege.edu.np
         firstName:
           type: string
           description: user given name from the google authentication
+          example: harihar
         lastName:
           type: string
           description: user family name from the google authentication
+          example: archarya
         image:
           type: string
           description: user profile image from the google authentication
-      example:
-        googleId: jhbjfs794_8hnj
-        username: harihar archarya
-        email: harihar@heraldcollege.edu.np
-        firstName: harihar
-        lastName: archarya
-        image: http://linktofile.com
+          example: http://linktofile.com
+  securitySchemes:
+    GoogleOAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:3000/api/users/registration/auth/google
+          tokenUrl: http://localhost:3000/api/users/registration/auth/google
+          scopes:
+            profile: Grants access to the basic profile information
+            email: Grants access to the user's email address
+#
