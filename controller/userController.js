@@ -31,6 +31,7 @@ const jwt = require("jsonwebtoken");
 const signUpUser = async (req, res) => {
   try {
     const reg = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/g;
+    const regPAT = /^(pat|PAT)[a-zA-Z0-9\.]+@heraldcollege.edu.np$/g;
     console.log(req.body);
     const { username, email, firstName, lastName, password, confirmPassword } =
       req.body;
@@ -54,12 +55,33 @@ const signUpUser = async (req, res) => {
     const userAvailable = await User.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (!reg.test(email)) {
+    if (!reg.test(email) && !regPAT.test(email)) {
       res.status(403);
       throw new Error("Email Validation Failed. Use the Organization Email");
     } else if (userAvailable) {
       res.status(401);
       throw new Error("User Already Exist");
+    } else if (regPAT.test(email)) {
+      const user = await User.create({
+        username,
+        email,
+        firstName,
+        lastName,
+        password: hashedPassword,
+        role: "admin",
+      });
+
+      res.status(200).json({
+        data: {
+          _id: user.id,
+          username: user.username,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+        },
+        message: "User Created Successfully",
+      });
     } else {
       const user = await User.create({
         username,
@@ -77,6 +99,7 @@ const signUpUser = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          role: user.role,
         },
         message: "User Created Successfully",
       });
