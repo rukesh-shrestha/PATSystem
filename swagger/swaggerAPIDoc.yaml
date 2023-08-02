@@ -14,8 +14,15 @@ info:
     email: rukesh.shrestha@heraldcollege.edu.np
 
 servers:
+<<<<<<< HEAD
   - url: http://localhost:3000
     description: Development server
+=======
+  - url: https://backendpatsystem.onrender.com/
+    description: Hosted server
+  - url: localhost:3000
+    description: Local Server
+>>>>>>> 5f8c6ac (added)
 
 #tags header of the each api docs
 tags:

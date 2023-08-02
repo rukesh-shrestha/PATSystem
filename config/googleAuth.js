@@ -15,25 +15,33 @@ const googeleAuth = async (passport) => {
       },
       async function (accessToken, refreshToken, profile, done) {
         try {
-          const newUser = {
-            googleId: profile.id,
-            username: profile.displayName,
-            email: profile.emails[0].value,
-            firstName: profile.name["givenName"],
-            lastName: profile.name["familyName"],
-            image: profile.photos[0].value,
-          };
-          let user = await User.findOne({ googleId: profile.id });
-
-          if (user) {
-            done(null, user);
+          userEmail = profile.emails[0].value;
+          const reg = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/g;
+          if (!reg.test(userEmail)) {
+            done(
+              "Email Validation Failed. Try to login from the organization email.",
+              userEmail
+            );
           } else {
-            users = await User.create(newUser);
-            done(null, users);
+            const newUser = {
+              googleId: profile.id,
+              username: profile.displayName,
+              email: userEmail,
+              firstName: profile.name["givenName"],
+              lastName: profile.name["familyName"],
+              image: profile.photos[0].value,
+            };
+            let user = await User.findOne({ googleId: profile.id });
+
+            if (user) {
+              done(null, user);
+            } else {
+              users = await User.create(newUser);
+              done(null, users);
+            }
           }
         } catch (error) {
           console.error(error);
-          process.exit(1);
         }
       }
     )
