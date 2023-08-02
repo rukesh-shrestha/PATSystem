@@ -21,7 +21,7 @@ const corsOptions = {
   credentials: true, // If you need to allow sending cookies or authentication headers
 };
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-
+app.use(express.json());
 app.use(cors(corsOptions));
 app.use(
   session({

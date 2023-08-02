@@ -3,6 +3,8 @@ const router = express.Router();
 const {
   userHome,
   userLogoutController,
+  signUpUser,
+  signInUser,
 } = require("../controller/userController");
 const passport = require("passport");
 const authenticateUser = require("../middleware/checkAuthenticateMiddleware");
@@ -30,4 +32,9 @@ router.get(
 );
 
 router.get("/logout", authenticateUser, userLogoutController);
+
+// custom user signup for superadmin
+router.post("/signup", signUpUser);
+router.post("/signin", signInUser);
+
 module.exports = router;

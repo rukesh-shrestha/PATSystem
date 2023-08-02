@@ -3,7 +3,7 @@ const userSchema = mongoose.Schema(
   {
     googleId: {
       type: String,
-      required: [true, "Missing Google ID. Google Authentication Required"],
+      // required: [true, "Missing Google ID. Google Authentication Required"],
     },
     username: {
       type: String,
@@ -20,6 +20,14 @@ const userSchema = mongoose.Schema(
     lastName: {
       type: String,
       required: [true, "Mising lastname"],
+    },
+    role: {
+      type: String,
+      enum: ["superadmin", "admin", "staff"],
+      required: [true, "Missing Role"],
+    },
+    password: {
+      type: String,
     },
     image: {
       type: String,
