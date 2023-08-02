@@ -32,7 +32,8 @@ paths: # Adding the 'paths' property
       tags:
         - Users
       security:
-        - GoogleOAuth2: [] # Apply GoogleOAuth2 security to this endpoint
+        - GoogleOAuth2L: [] # Apply GoogleOAuth2 security to this endpoint
+        - GoogleOAuth2P: []
       responses:
         "200":
           description: Email of the Authenticated User
@@ -51,7 +52,8 @@ paths: # Adding the 'paths' property
       tags:
         - Users
       security:
-        - GoogleOAuth2: []
+        - GoogleOAuth2L: []
+        - GoogleOAuth2P: []
       responses:
         "200":
           description: I feel bad you are going
@@ -95,7 +97,17 @@ components:
           description: user profile image from the google authentication
           example: http://linktofile.com
   securitySchemes:
-    GoogleOAuth2:
+    GoogleOAuth2P:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
+          tokenUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
+          scopes:
+            profile: Grants access to the basic profile information
+            email: Grants access to the user's email address
+
+    GoogleOAuth2L:
       type: oauth2
       flows:
         authorizationCode:
