@@ -1,7 +1,7 @@
 const userHome = (req, res) => {
   const useremail = req.user.email;
   res.status(200).json({
-    user: useremail,
+    user: req.user,
   });
 };
 
