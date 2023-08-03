@@ -25,17 +25,28 @@ tags:
     description: Operations related to user google authentication and authorization. Can be used for admin and staff.
   - name: User
     description: Operations related to custom user authentication and authorization. Can be used for superadmin and admin
+  - name: Dashboard
+    description: users Dashboad
 
 # api docs path
 paths: # Adding the 'paths' property
+  /api/users/registration/auth/google:
+    get:
+      summary: Register or Login with google account
+      description: register or login with google account
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Successfully authenticate
   /api/users:
     get:
       summary: Get a email of the authenticated users
       tags:
         - Users
       security:
-        - GoogleOAuth2L: [] # Apply GoogleOAuth2 security to this endpoint
-        - GoogleOAuth2P: []
+        - bearerAuth: [] # Apply GoogleOAuth2 security to this endpoint
+
       responses:
         "200":
           description: Email of the Authenticated User
@@ -54,8 +65,7 @@ paths: # Adding the 'paths' property
       tags:
         - Users
       security:
-        - GoogleOAuth2L: []
-        - GoogleOAuth2P: []
+        - bearerAuth: []
       responses:
         "200":
           description: I feel bad you are going
@@ -140,6 +150,48 @@ paths: # Adding the 'paths' property
         "401":
           description: Validation Error - Password do not match
 
+  /api/sa/dashboard:
+    get:
+      tags:
+        - Dashboard
+      summary: SuperAdmin  Dashboard
+      description: SuperAdmin User Dashboard.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Authenticate Successfully.
+        "403":
+          description: You don't have permission.
+
+  /api/a/dashboard:
+    get:
+      tags:
+        - Dashboard
+      summary: Admin  Dashboard
+      description: Admin User Dashboard. Can be access by super user.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Authenticate Successfully.
+        "403":
+          description: You don't have permission.
+
+  /api/s/dashboard:
+    get:
+      tags:
+        - Dashboard
+      summary: staff  Dashboard
+      description: staff User Dashboard. Can be access by both super user and admin.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Authenticate Successfully.
+        "403":
+          description: You don't have permission.
+
 # api model schema
 components:
   schemas:
@@ -201,25 +253,25 @@ components:
           description: User data updated date and time. Auto Field
           example: 2023-08-02T16:05:13.770+00:00
   securitySchemes:
-    GoogleOAuth2P:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
-          tokenUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
-          scopes:
-            profile: Grants access to the basic profile information
-            email: Grants access to the user's email address
+    # GoogleOAuth2P:
+    #   type: oauth2
+    #   flows:
+    #     authorizationCode:
+    #       authorizationUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
+    #       tokenUrl: https://backendpatsystem.onrender.com/api/users/registration/auth/google
+    #       scopes:
+    #         profile: Grants access to the basic profile information
+    #         email: Grants access to the user's email address
 
-    GoogleOAuth2L:
-      type: oauth2
-      flows:
-        authorizationCode:
-          authorizationUrl: http://localhost:3000/api/users/registration/auth/google
-          tokenUrl: http://localhost:3000/api/users/registration/auth/google
-          scopes:
-            profile: Grants access to the basic profile information
-            email: Grants access to the user's email address
+    # GoogleOAuth2L:
+    #   type: oauth2
+    #   flows:
+    #     authorizationCode:
+    #       authorizationUrl: http://localhost:3000/api/users/registration/auth/google
+    #       tokenUrl: http://localhost:3000/api/users/registration/auth/google
+    #       scopes:
+    #         profile: Grants access to the basic profile information
+    #         email: Grants access to the user's email address
     bearerAuth:
       type: http
       scheme: bearer
