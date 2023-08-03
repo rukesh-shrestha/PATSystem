@@ -38,14 +38,6 @@ const googeleAuth = async (passport) => {
             let user = await User.findOne({ googleId: profile.id });
 
             if (user) {
-              customeAccessToken = jwt.sign(
-                {
-                  sub: use.profile.id,
-                },
-                process.env.SESSION_SECRET_KEY,
-                { expiresIn: "30m" }
-              );
-
               done(null, user);
             } else {
               users = await User.create(newUser);

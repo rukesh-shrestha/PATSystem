@@ -8,6 +8,7 @@ const {
 } = require("../controller/userController");
 const passport = require("passport");
 const authenticateUser = require("../middleware/checkAuthenticateMiddleware");
+const jwt = require("jsonwebtoken");
 
 router.get("/", authenticateUser, userHome);
 
@@ -25,9 +26,35 @@ router.get(
     failureRedirect: "/login",
   }),
   async function (req, res) {
+    try {
+      jwt.sign(
+        {
+          user: {
+            id: req.user.id,
+            username: req.user.username,
+            email: req.user.email,
+            firstName: req.user.firstName,
+            lastName: req.user.lastName,
+            role: req.user.role,
+            status: req.user.status,
+          },
+        },
+        process.env.SESSION_SECRET_KEY,
+        { expiresIn: "30m" },
+        (err, token) => {
+          if (err) {
+            res.status(498);
+            throw new Error("Cannot Create token");
+          }
+          res.json({ token: token });
+        }
+      );
+    } catch (error) {
+      res.json({ error: error.message });
+    }
     // Successful authentication, redirect home.
 
-    res.status(200).redirect("/api/users");
+    // res.status(200).redirect("/api/users");
   }
 );
 
