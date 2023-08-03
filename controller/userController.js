@@ -1,7 +1,9 @@
 const userHome = (req, res) => {
   const useremail = req.user.email;
+  console.log(req);
   res.status(200).json({
     user: req.user,
+    accesstoken: req.session,
   });
 };
 

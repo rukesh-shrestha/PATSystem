@@ -1,6 +1,7 @@
+const { use } = require("passport");
 const User = require("../models/User");
 const dotenv = require("dotenv");
-
+// const GoogleTokenStrategy = require('passport-google-token').Strategy;
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 dotenv.config();
@@ -13,7 +14,7 @@ const googeleAuth = async (passport) => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "/api/users/google/callback",
       },
-      async function (accessToken, refreshToken, profile, done) {
+      async function (res, accessToken, refreshToken, profile, done) {
         try {
           let role;
           userEmail = profile.emails[0].value;
@@ -37,6 +38,14 @@ const googeleAuth = async (passport) => {
             let user = await User.findOne({ googleId: profile.id });
 
             if (user) {
+              customeAccessToken = jwt.sign(
+                {
+                  sub: use.profile.id,
+                },
+                process.env.SESSION_SECRET_KEY,
+                { expiresIn: "30m" }
+              );
+
               done(null, user);
             } else {
               users = await User.create(newUser);
