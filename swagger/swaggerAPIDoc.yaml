@@ -16,13 +16,15 @@ info:
 servers:
   - url: https://backendpatsystem.onrender.com/
     description: Hosted server
-  - url: localhost:3000
+  - url: http://localhost:3000
     description: Local Server
 
 #tags header of the each api docs
 tags:
   - name: Users
-    description: Operations related to user authentication and authorization
+    description: Operations related to user google authentication and authorization. Can be used for admin and staff.
+  - name: User
+    description: Operations related to custom user authentication and authorization. Can be used for superadmin and admin
 
 # api docs path
 paths: # Adding the 'paths' property
@@ -59,6 +61,84 @@ paths: # Adding the 'paths' property
           description: I feel bad you are going
         "401":
           description: Unauthorized
+  /api/users/signup:
+    post:
+      tags:
+        - User
+      summary: Create the new user
+      description: Registering the new superadmin or admin user for the sign up. If the email starts with PAT then it is admin otherwise superadmin.
+      requestBody:
+        description: User properties object
+        content:
+          application/json:
+            schema:
+              properties:
+                username:
+                  type: string
+                  description: username of the user
+                  example: Ram Sharma
+                email:
+                  type: string
+                  description: email of the user
+                  example: someone@heraldcollege.edu.np
+                firstName:
+                  type: string
+                  description: first name of the user
+                  example: Ram Shree
+                lastName:
+                  type: string
+                  description: last name of the user
+                  example: Sharma
+                password:
+                  type: string
+                  description: password of the user
+                  example: password23
+                confirmPassword:
+                  type: string
+                  description: Re-type your password
+                  example: password23
+        required: true
+
+      responses:
+        "200":
+          description: User Created Successfully
+        "400":
+          description: Validation Error - Missing Field
+        "403":
+          description: Validation Error - Email or Password field invalid
+        "401":
+          description: Unautthorized - User Already Exist
+  /api/users/signin:
+    post:
+      tags:
+        - User
+      summary: Authenticate the Signup users
+      description: authenticate the users. Only for the admin and super admin.
+
+      requestBody:
+        description: User object
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  description: register user email address
+                  example: shreeram23@gmail.com
+                password:
+                  type: string
+                  description: register user password
+                  example: adminadmin
+        required: true
+      responses:
+        "200":
+          description: Authenticate Successfully
+        "400":
+          description: Missing Field [email or password]
+        "404":
+          description: User Not Found - Doesnot have any account with the given email
+        "401":
+          description: Validation Error - Password do not match
 
 # api model schema
 components:
@@ -66,11 +146,13 @@ components:
     User:
       type: object
       required:
-        - googleId
         - username
         - email
         - firstName
         - lastName
+        - role
+        - status
+
       properties:
         googleId:
           type: string
@@ -79,10 +161,12 @@ components:
         username:
           type: string
           description: username from the google authentication
+
           example: harihar archarya
         email:
           type: string
           description: user login email from the google authentication
+
           example: harihar@heraldcollege.edu.np
         firstName:
           type: string
@@ -92,10 +176,30 @@ components:
           type: string
           description: user family name from the google authentication
           example: archarya
+        role:
+          type: string
+          description: User role in the system. The default value is set as per the user email
+          enum: [superadmin, admin, staff]
+          default: staff
+          example: staff
+        status:
+          type: boolean
+          description: User status in the system.
+          enum: [true, false]
+          default: true
+          example: true
         image:
           type: string
           description: user profile image from the google authentication
           example: http://linktofile.com
+        createdAt:
+          type: string
+          description: user created date and time. Auto Field
+          example: 2023-08-02T16:05:13.770+00:00
+        updatedAt:
+          type: string
+          description: User data updated date and time. Auto Field
+          example: 2023-08-02T16:05:13.770+00:00
   securitySchemes:
     GoogleOAuth2P:
       type: oauth2
@@ -116,4 +220,8 @@ components:
           scopes:
             profile: Grants access to the basic profile information
             email: Grants access to the user's email address
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 #

@@ -6,7 +6,7 @@ const connectDB = require("./config/dbConnector");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const userRouter = require("./routes/userRoutes");
-const swaggerJsdoc = require("swagger-jsdoc");
+const dashRouter = require("./routes/dashboardRoutes");
 const swaggerUI = require("swagger-ui-express");
 const YAML = require("yamljs");
 const passport = require("passport");
@@ -38,6 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 const port = process.env.PORT;
 app.use("/api/users", userRouter);
+app.use("/api", dashRouter);
 
 app.use(morgan("dev"));
 app.listen(port, () => {

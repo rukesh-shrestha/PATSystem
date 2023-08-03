@@ -22,7 +22,7 @@ const userLogoutController = (req, res) => {
   });
 };
 
-// Users for the super admin
+// Users for the super admin and admin
 
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
@@ -30,11 +30,14 @@ const jwt = require("jsonwebtoken");
 
 const signUpUser = async (req, res) => {
   try {
-    const reg = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/g;
-    const regPAT = /^(pat|PAT)[a-zA-Z0-9\.]+@heraldcollege.edu.np$/g;
+    const reg = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/y;
+
+    const regPAT = /^(pat|PAT)[a-zA-Z0-9\.]*@heraldcollege.edu.np$/y;
     console.log(req.body);
     const { username, email, firstName, lastName, password, confirmPassword } =
       req.body;
+
+    console.log(!reg.test(email));
 
     if (
       !username ||
@@ -55,9 +58,10 @@ const signUpUser = async (req, res) => {
     const userAvailable = await User.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (!reg.test(email) && !regPAT.test(email)) {
+    if (reg.test(email)) {
+      console.log(reg.test(email));
       res.status(403);
-      throw new Error("Email Validation Failed. Use the Organization Email");
+      throw new Error("Email Validation Failed. Use the organization Email");
     } else if (userAvailable) {
       res.status(401);
       throw new Error("User Already Exist");
@@ -82,7 +86,7 @@ const signUpUser = async (req, res) => {
         },
         message: "User Created Successfully",
       });
-    } else {
+    } else if (reg.test(email)) {
       const user = await User.create({
         username,
         email,
@@ -102,6 +106,12 @@ const signUpUser = async (req, res) => {
           role: user.role,
         },
         message: "User Created Successfully",
+      });
+    } else {
+      res.status(401);
+      res.json({
+        error:
+          "Email validation failed. You can use only use one special character. (.)",
       });
     }
   } catch (error) {
@@ -141,6 +151,8 @@ const signInUser = async (req, res) => {
               email: userAvailable.email,
               firstName: userAvailable.firstName,
               lastName: userAvailable.lastName,
+              role: userAvailable.role,
+              status: userAvailable.status,
             },
           },
           process.env.SESSION_SECRET_KEY,
