@@ -12,12 +12,14 @@ const {
 } = require("../middleware/roleValidation");
 const validateToken = require("../middleware/validateToken");
 
+dashRouter.use(validateToken);
+
 dashRouter.get(
   "/sa/dashboard",
-  validateToken,
+
   superAdminPermission,
   superAdminBoard
 );
-dashRouter.get("/a/dashboard", validateToken, adminPermission, adminBoard);
-dashRouter.get("/s/dashboard", validateToken, staffPermission, staffBoard);
+dashRouter.get("/a/dashboard", adminPermission, adminBoard);
+dashRouter.get("/s/dashboard", staffPermission, staffBoard);
 module.exports = dashRouter;
