@@ -5,6 +5,7 @@ const {
   userLogoutController,
   signUpUser,
   signInUser,
+  updatepassword,
 } = require("../controller/userController");
 
 const verifyEmail = require("../utils/verifyEmail");
@@ -12,6 +13,9 @@ const verifyEmail = require("../utils/verifyEmail");
 const passport = require("passport");
 const authenticateUser = require("../middleware/checkAuthenticateMiddleware");
 const jwt = require("jsonwebtoken");
+
+const validateToken = require("../middleware/validateToken");
+const validateUserStatus = require("../middleware/validateUserStatus");
 
 router.get("/", authenticateUser, userHome);
 
@@ -42,6 +46,7 @@ router.get(
               role: req.user.role,
               status: req.user.status,
               image: req.user.image,
+              isVerified: req.user.isVerified,
             },
           },
           process.env.SESSION_SECRET_KEY,
@@ -72,5 +77,13 @@ router.get("/logout", authenticateUser, userLogoutController);
 router.post("/signup", signUpUser);
 router.post("/signin", signInUser);
 router.get("/verify-email", verifyEmail);
+
+//password update
+router.post(
+  "/password/update",
+  validateToken,
+  validateUserStatus,
+  updatepassword
+);
 
 module.exports = router;

@@ -12,6 +12,7 @@ const generateAccessToken = (userAvailable) => {
         role: userAvailable.role,
         status: userAvailable.status,
         image: userAvailable.image,
+        isVerified: userAvailable.isVerified,
       },
     },
     process.env.SESSION_SECRET_KEY,

@@ -163,10 +163,36 @@ const signInUser = async (req, res) => {
   }
 };
 
+const updatepassword = async (req, res) => {
+  try {
+    const { password, confirmPassword } = req.body;
+    if (password !== confirmPassword) {
+      res.status(403);
+      throw new Error("Password validation Failed - Password do not match");
+    } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await User.findOneAndUpdate(
+        { email: req.user.email },
+        { $set: { password: hashedPassword } },
+        { new: true }
+      );
+
+      res.json({
+        equal: "Password Updated",
+      });
+    }
+  } catch (error) {
+    res.json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   userHome,
   userRegister,
   userLogoutController,
   signUpUser,
   signInUser,
+  updatepassword,
 };

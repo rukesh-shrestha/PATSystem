@@ -25,7 +25,8 @@ const sendVerificationEmail = (user) => {
         <br>    
 
         If you encounter any issues or have any questions, feel free to contact at rukesh.shrestha11@gmail.com or rukesh.shrestha@heraldcollege.edu.np. We're here to help!
-        <br>        
+        <br>
+        <br>     
 
         Thank you for using the system.
         <br>
