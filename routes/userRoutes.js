@@ -30,28 +30,33 @@ router.get(
   }),
   async function (req, res) {
     try {
-      jwt.sign(
-        {
-          user: {
-            id: req.user.id,
-            username: req.user.username,
-            email: req.user.email,
-            firstName: req.user.firstName,
-            lastName: req.user.lastName,
-            role: req.user.role,
-            status: req.user.status,
+      if (req.user.isVerified) {
+        jwt.sign(
+          {
+            user: {
+              id: req.user.id,
+              username: req.user.username,
+              email: req.user.email,
+              firstName: req.user.firstName,
+              lastName: req.user.lastName,
+              role: req.user.role,
+              status: req.user.status,
+              image: req.user.image,
+            },
           },
-        },
-        process.env.SESSION_SECRET_KEY,
-        { expiresIn: "30m" },
-        (err, token) => {
-          if (err) {
-            res.status(498);
-            throw new Error("Cannot Create token");
+          process.env.SESSION_SECRET_KEY,
+          { expiresIn: "30m" },
+          (err, token) => {
+            if (err) {
+              res.status(498);
+              throw new Error("Cannot Create token");
+            }
+            res.json({ token: token });
           }
-          res.json({ token: token });
-        }
-      );
+        );
+      } else {
+        res.json({ message: "Verification Email Send" });
+      }
     } catch (error) {
       res.json({ error: error.message });
     }

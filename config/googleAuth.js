@@ -1,8 +1,9 @@
 const { use } = require("passport");
 const User = require("../models/User");
 const dotenv = require("dotenv");
-// const GoogleTokenStrategy = require('passport-google-token').Strategy;
+const crypto = require("crypto");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const sendVerificationEmail = require("../utils/sendVerificationMail");
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const googeleAuth = async (passport) => {
               lastName: profile.name["familyName"],
               image: profile.photos[0].value,
               role: "admin",
+              emailToken: crypto.randomBytes(64).toString("hex"),
             };
             let user = await User.findOne({ googleId: profile.id });
 
@@ -42,6 +44,7 @@ const googeleAuth = async (passport) => {
             } else {
               users = await User.create(newUser);
               done(null, users);
+              sendVerificationEmail(users);
             }
           } else {
             const newUser = {
@@ -51,6 +54,7 @@ const googeleAuth = async (passport) => {
               firstName: profile.name["givenName"],
               lastName: profile.name["familyName"],
               image: profile.photos[0].value,
+              emailToken: crypto.randomBytes(64).toString("hex"),
               role: "staff",
             };
             let user = await User.findOne({ googleId: profile.id });
@@ -60,6 +64,7 @@ const googeleAuth = async (passport) => {
             } else {
               users = await User.create(newUser);
               done(null, users);
+              sendVerificationEmail(users);
             }
           }
         } catch (error) {
