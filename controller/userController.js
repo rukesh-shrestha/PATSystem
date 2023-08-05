@@ -1,9 +1,13 @@
+const generateAccessToken = require("../utils/accessToken");
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+const sendVerificationEmail = require("../utils/sendVerificationMail");
+
 const userHome = (req, res) => {
-  const useremail = req.user.email;
   console.log(req);
   res.status(200).json({
     user: req.user,
-    accesstoken: req.session,
   });
 };
 
@@ -26,20 +30,15 @@ const userLogoutController = (req, res) => {
 
 // Users for the super admin and admin
 
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-
 const signUpUser = async (req, res) => {
   try {
-    const reg = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/y;
+    const reg = /@heraldcollege.edu.np$/;
+    const regSuperAdmin = /[a-zA-Z\.]+[0-9a-zA-Z\.]*@heraldcollege.edu.np$/y;
 
     const regPAT = /^(pat|PAT)[a-zA-Z0-9\.]*@heraldcollege.edu.np$/y;
     console.log(req.body);
     const { username, email, firstName, lastName, password, confirmPassword } =
       req.body;
-
-    console.log(!reg.test(email));
 
     if (
       !username ||
@@ -60,7 +59,7 @@ const signUpUser = async (req, res) => {
     const userAvailable = await User.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (reg.test(email)) {
+    if (!reg.test(email)) {
       console.log(reg.test(email));
       res.status(403);
       throw new Error("Email Validation Failed. Use the organization Email");
@@ -75,7 +74,11 @@ const signUpUser = async (req, res) => {
         lastName,
         password: hashedPassword,
         role: "admin",
+        emailToken: crypto.randomBytes(64).toString("hex"),
       });
+
+      console.log(sendVerificationEmail(user));
+      sendVerificationEmail(user);
 
       res.status(200).json({
         data: {
@@ -87,8 +90,9 @@ const signUpUser = async (req, res) => {
           role: user.role,
         },
         message: "User Created Successfully",
+        mail: "Verification Email Has been send.Check your mail to verify your account. If mail not found check in spam folder.",
       });
-    } else if (reg.test(email)) {
+    } else if (regSuperAdmin.test(email)) {
       const user = await User.create({
         username,
         email,
@@ -96,7 +100,9 @@ const signUpUser = async (req, res) => {
         lastName,
         password: hashedPassword,
         role: "superadmin",
+        emailToken: crypto.randomBytes(64).toString("hex"),
       });
+      sendVerificationEmail(user);
 
       res.status(200).json({
         data: {
@@ -108,6 +114,7 @@ const signUpUser = async (req, res) => {
           role: user.role,
         },
         message: "User Created Successfully",
+        mail: "Verification Email Has been send.Check your mail to verify your account. If mail not found check in spam folder.",
       });
     } else {
       res.status(401);
@@ -145,21 +152,7 @@ const signInUser = async (req, res) => {
         res.status(401);
         throw new Error("Validation Failed");
       } else {
-        const accesstoken = jwt.sign(
-          {
-            user: {
-              id: userAvailable.id,
-              username: userAvailable.username,
-              email: userAvailable.email,
-              firstName: userAvailable.firstName,
-              lastName: userAvailable.lastName,
-              role: userAvailable.role,
-              status: userAvailable.status,
-            },
-          },
-          process.env.SESSION_SECRET_KEY,
-          { expiresIn: "30m" }
-        );
+        const accesstoken = generateAccessToken(userAvailable);
         res.status(200);
         res.json({ token: accesstoken });
       }

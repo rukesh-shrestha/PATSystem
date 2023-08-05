@@ -1,6 +1,4 @@
 const jwt = require("jsonwebtoken");
-const passport = require("passport");
-const GoogleTokenStrategy = require("passport-google-token").Strategy;
 
 const validateToken = async (req, res, next) => {
   try {
@@ -29,18 +27,5 @@ const validateToken = async (req, res, next) => {
     res.json({ error: error.message });
   }
 };
-
-// const validateGoogleToken = (req, res, next) => {
-//   try {
-//     let authHeader = req.headers.Authorization || req.headers.authorization;
-//     if (authHeader && authHeader.startsWith("Bearer")) {
-//       token = authHeader.split(" ")[1];
-//       passport.authenticate();
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.json({ error: error.message });
-//   }
-// };
 
 module.exports = validateToken;

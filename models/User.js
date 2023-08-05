@@ -33,6 +33,14 @@ const userSchema = mongoose.Schema(
       enum: [true, false],
       default: true,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+      enum: [true, false],
+    },
+    emailToken: {
+      type: String,
+    },
     password: {
       type: String,
     },

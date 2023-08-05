@@ -6,6 +6,9 @@ const {
   signUpUser,
   signInUser,
 } = require("../controller/userController");
+
+const verifyEmail = require("../utils/verifyEmail");
+
 const passport = require("passport");
 const authenticateUser = require("../middleware/checkAuthenticateMiddleware");
 const jwt = require("jsonwebtoken");
@@ -63,5 +66,6 @@ router.get("/logout", authenticateUser, userLogoutController);
 // custom user signup for superadmin
 router.post("/signup", signUpUser);
 router.post("/signin", signInUser);
+router.get("/verify-email", verifyEmail);
 
 module.exports = router;
