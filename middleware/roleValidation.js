@@ -1,10 +1,15 @@
 const adminPermission = (req, res, next) => {
   try {
-    if (req.user.role === "admin" || req.user.role === "superadmin") {
-      next();
+    if (req.user.isVerified) {
+      if (req.user.role === "admin" || req.user.role === "superadmin") {
+        next();
+      } else {
+        res.status(403);
+        throw new Error("You don't have permission.");
+      }
     } else {
-      res.status(403);
-      throw new Error("You don't have permission.");
+      res.status(401);
+      throw new Error("Unauthorized - Email is not Verify");
     }
   } catch (error) {
     res.json({ error: error.message });
@@ -13,11 +18,16 @@ const adminPermission = (req, res, next) => {
 
 const superAdminPermission = (req, res, next) => {
   try {
-    if (req.user.role === "superadmin") {
-      next();
+    if (req.user.isVerified) {
+      if (req.user.role === "superadmin") {
+        next();
+      } else {
+        res.status(403);
+        throw new Error("You don't have permission.");
+      }
     } else {
-      res.status(403);
-      throw new Error("You don't have permission.");
+      res.status(401);
+      throw new Error("Unauthorized - Email is not Verify");
     }
   } catch (error) {
     res.json({ error: error.message });
@@ -26,15 +36,20 @@ const superAdminPermission = (req, res, next) => {
 
 const staffPermission = (req, res, next) => {
   try {
-    if (
-      req.user.role === "staff" ||
-      req.user.role === "admin" ||
-      req.user.role === "superadmin"
-    ) {
-      next();
+    if (req.user.isVerified) {
+      if (
+        req.user.role === "staff" ||
+        req.user.role === "admin" ||
+        req.user.role === "superadmin"
+      ) {
+        next();
+      } else {
+        res.status(403);
+        throw new Error("You don't have permission.");
+      }
     } else {
-      res.status(403);
-      throw new Error("You don't have permission.");
+      res.status(401);
+      throw new Error("Unauthorized - Email is not Verify");
     }
   } catch (error) {
     res.json({ error: error.message });
